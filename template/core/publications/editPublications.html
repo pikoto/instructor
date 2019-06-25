@@ -1,0 +1,170 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+{% block header %}
+
+<div class="row-cat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<img src="{% static "core/img/stack/1454797116_generic.png"%}"/>
+			</div>
+			<div class="col-lg-10">
+			<h3><a href="/publications/conf/"><i class="fa fa-reply"></i> </a>Edycja publikacji: {{edit.name}}</h3>
+				<p class="lead">
+				{% autoescape on %}
+				{{edit.descriptions|safe}}
+				{% endautoescape %}
+				</p>		
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock header %}
+
+{% block content %}
+{% if user.is_authenticated and user.userprofile.status.id == 1 %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="well">
+			<form class="form-horizontal" id="quest_form" method="post" action="/publications/edit/{{edit.link}}/" enctype="multipart/form-data" role="form">
+				{% if er %}
+				{% for e in er %}
+				<p class="bg-danger">
+					<i class="fa fa-exclamation-triangle"></i> Błędna wartość dla pola:
+					{{e}}
+				</p>
+				{% endfor %}
+				{% endif %}
+				{% if add == 1 %}
+				<p class="bg-success">
+					<i class="fa fa-plus-circle"></i> Dodano
+				</p>
+				{% endif %}
+				{% csrf_token %}
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="form-group">
+							<label for="id_name">Tytuł:</label>
+							<input class="form-control" id="id_name" maxlength="128" name="name" type="text" value="{{edit.name}}"/>
+						</div>
+					</div>
+					<div class="col-lg-1">
+						<div class="form-group">
+							<label for="id_active">Aktywne:</label>
+							<input class="form-control"  {%if edit.active == 1%}checked {%else%} value="" {% endif %} id="id_active" name="active" type="checkbox" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="id_descriptions">Wiadomość:</label>
+					<textarea id="summernote" name="descriptions" class="form-control" rows="15">
+						{{edit.descriptions}}
+					</textarea>
+					<hr />
+				</div>
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label for="id_old_category">Obecna kategoria:</label>
+							<input class="form-control" id="id_old_category" min="0" name="old_category" value="{{edit.category}}" disabled="True"/>		
+						</div>			
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label for="id_category">Nowa kategoria:</label>
+							<select class="form-control" id="id_category" name="category" >
+								{% for e in cat %}
+								<option value="{{e.id}}">{{e.name}}</option>
+								{% endfor %}
+							</select>
+						</div>							
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-lg-1">
+						<div class="form-group">
+							<label for="id_temporary">Czas:</label>
+							<input class="form-control"  {%if edit.temporary == 1%}checked {%else%} value="" {% endif %} id="id_temporary" name="temporary" type="checkbox" />
+						</div>
+					</div>					
+					<div class="col-lg-5">
+						<div class="form-group">
+							<label for="id_start_date">Data od:</label>
+							<div class="input-group">
+								<input class="form-control" id="datetimepicker_start"  name="start_date" type="text" value="{{edit.start_date|date:"Y-m-d H:i"}}"/>
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="id_end_date">Data do:</label>
+							<div class="input-group">
+								<input class="form-control" id="datetimepicker_end"  name="end_date" type="text" value="{{edit.end_date|date:"Y-m-d H:i"}}" />
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							</div>
+						</div>
+					</div>
+				</div>				
+				<div class="form-group">
+					<div class=" pull-left">
+						<input class="btn btn-primary" type="submit" rows="1" name="submit" value="Dodaj" />
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+<!-- include codemirror (codemirror.css, codemirror.js, xml.js, formatting.js) -->
+
+<script>
+	$(document).ready(function() {
+		$('#summernote').summernote({
+			height : 300, // set editor height
+			minHeight : null, // set minimum height of editor
+			maxHeight : null, // set maximum height of editor
+			focus : false,                 // set focus to editable area after initializing summernote
+		}, "saveRange");
+	});
+
+</script>
+<script src="{% static "core/js/jquery.datetimepicker.full.min.js" %}"></script>
+<script>
+	jQuery('#datetimepicker_start').datetimepicker({
+		startDate : '+2015/01/01',
+		format : 'Y-m-d H:i',
+		mask : true,
+		lang : 'pl'
+	});
+	jQuery('#datetimepicker_end').datetimepicker({
+		startDate : '+2015/01/01',
+		format : 'Y-m-d H:i',
+		mask : true,
+		lang : 'pl'
+	}); 
+</script>
+{% else %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3 text-center">
+				<div class="well">
+					<h1 class="text-danger">Nie masz uprawnień</h1>
+					<a href="/" class="btn btn-primary">Strona główna</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+
+{% endif %}
+{% endblock content %}

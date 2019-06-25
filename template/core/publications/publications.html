@@ -1,0 +1,92 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+
+{% block other-head %}
+
+<!-- player skin -->
+<link rel="stylesheet" href="{% static "core/css/functional.css" %}">
+
+<!-- site specific styling -->
+<style>
+	.flowplayer {
+		width: 80%;
+	}
+</style>
+
+<!-- for video tag based installs flowplayer depends on jQuery 1.7.2+ -->
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
+<!-- include flowplayer -->
+<script src="{% static "core/js/flowplayer.min.js" %} "></script>
+{% endblock other-head %}
+
+{% block header %}
+
+<div class="row-cat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<img src="{% static "core/img/stack/1454797116_generic.png"%}"/>
+			</div>
+			<div class="col-lg-10">
+				<h3 class="featurette-heading"><a href="/publications/cat/{{pub.category.link}}"><i class="fa fa-reply"></i> </a>Publikacja: <span class="text-muted">{{pub.name}}</span></h3>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock header %}
+
+{% block content %}
+<div class="push"></div>
+
+<section>
+	<div class="row">
+		<div class="container">
+
+			<p class="lead">
+				{% autoescape on %}
+				{{pub.descriptions|safe}}
+				{% endautoescape %}
+			</p>
+			<hr class="hr">
+			<h4 class="text-center">Załączniki</h4>
+			<hr>
+			{% for e in att %}
+
+			{% cycle "<div class='row'>" "" %}
+
+				<div class="col-lg-4">
+					<div class="text-center thumbnail">
+						<span></span><i class="{{e.types.icons}} fa-4x fa-blue"></i></span>
+						<div class="caption">
+							<h3>{{e.name}}</h3>
+							<p>
+								{% autoescape on %}
+								{{e.descriptions|safe}}
+								{% endautoescape %}
+							</p>
+							{% if e.types.id != 6 %}
+							<a href="/{{e.files}}" class="btn btn-default"><i class="fa fa-download"></i> | Pobierz</a>
+							{% else %}
+							<div class="flowplayer" data-swf="{% static "core/swf/flowplayer.swf" %}" data-ratio="0.4167">
+								<video>
+									<source type="video/mp4" src="/{{e.files}}">
+								</video>
+							</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+
+				{% cycle "" "</div>" %}
+
+			{% endfor %}
+
+		</div>
+	</div>
+
+</section>
+{% endblock content %}
+

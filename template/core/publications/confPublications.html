@@ -1,0 +1,123 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+{% block header %}
+
+<div class="row-cat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<img src="{% static "core/img/stack/1454797116_generic.png"%}"/>
+			</div>
+			<div class="col-lg-10">
+				<h3 class="featurette-heading">Lista publikacji</h3>
+				<div class="pull-left">
+				<a href="/publications/add/" class="btn btn-primary">Dodaj Publikację</a>
+				</div>				
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock header %}
+
+{% block content %}
+{% if user.is_authenticated and user.userprofile.status.id == 1 %}
+
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="well">
+			<h2>Lista Publikacji</h2>
+			{% if pag %}
+			<div class="">
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th>Nazwa</th>
+							<th>Opis</th>
+							<th>Data dodania</th>
+							<th>Kategoria</th>
+							<th>Użytkownik dodający</th>
+							<th>Stan</th>
+							<th>Akcja</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+						{% for e in pag %}
+						<tr>
+							<td id="td-vert-align">
+							<p>
+								{{e.name}}
+							</p></td>
+							<td id="td-vert-align">
+							<p>
+								{% autoescape on %}
+									{{e.descriptions|truncatewords:"4"}}
+								{% endautoescape %}
+							</p></td>
+							<td>{{e.add_date|date:"Y-m-d H:i"}}</td>
+							<td>{{e.category}}</td>
+							<td>{{e.add_user}}</td>
+							<td id="td-vert-align"> {% if e.active %} <i class="fa fa-check-square fa-3x fa-orange"></i> {% else %} <i class="fa fa-minus-square fa-3x"></i> {% endif %} </td>
+							<td id="td-vert-align"> {% if e.active %} <a href="/publications/set/{{e.link}}/{{pag.number}}/" class="btn btn-primary">Deaktywuj</a> 
+								{% else %} <a href="/publications/set/{{e.link}}/{{pag.number}}/" class="btn btn-primary">Aktywuj</a> 
+								{% endif %} <a href="/publications/edit/{{e.link}}/" class="btn btn-default">Edytuj</a>
+											<a href="/publications/del/{{e.link}}/" class="btn btn-default"><i class="fa fa-trash"></i></a>
+								<a href="/publications/attatchemts/{{e.link}}/" class="btn btn-default"><i class="fa fa-paperclip"></i></a>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="navbar">
+			<div class="container text-center">
+				<ul class="pagination">
+					{% if pag.has_previous %}
+					<li>
+						<a href="?page={{ pag.previous_page_number }}" aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a>
+					</li>
+					{% endif %}
+					{% for e in pag.paginator.page_range  %}
+					<li>
+						<a href="?page={{ e }}">{{ e }}</a>
+					</li>
+					{% endfor %}
+					{% if pag.has_next %}
+					<li>
+						<a href="?page={{ pag.next_page_number }}" aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a>
+					</li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>						
+		{% else %}
+			<h3 class="text-info bg-info">Nie ma dostęnych kategorii publikacji</h3>
+		</div>
+		{% endif %}
+	</div>
+</section>
+
+{% else %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3 text-center">
+				<div class="well">
+					<h1 class="text-danger">Nie masz uprawnień</h1>
+					<a href="/" class="btn btn-primary">Strona główna</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+{% endif %}
+{% endblock content %}

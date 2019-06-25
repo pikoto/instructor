@@ -1,0 +1,106 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+
+{% block header %}
+
+<div class="row-cat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<img src="{% static "core/img/stack/1454797116_generic.png"%}"/>
+			</div>
+			<div class="col-lg-10">
+			<h3><a href="/questsions/{{quest.category.link}}/quest">{{quest.category.name}}</a></h3>
+				<p class="lead">
+				{% autoescape on %}
+				{{quest.quest|safe}}
+				{% endautoescape %}
+				</p>		
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock header %}
+
+{% block content %}
+
+{% if ed %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-4 col-lg-offset-3 col-md-offset-2">
+				<p>
+					Teacher 2.0: <strong>Zmiany wprowadzono!</strong>
+				</p>
+				<a href="/questsions/answer/{{edit.link}}/">Odpowiedź</a>
+				<br />
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+
+{% else %}
+
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="well">
+			<form class="form-horizontal" id="quest_form" method="post" action="/questsions/answer/edit/{{edit.link}}/" enctype="multipart/form-data" role="form">
+				{% if er %}
+				{% for e in er %}
+				<p class="bg-danger">
+					<i class="fa fa-exclamation-triangle"></i> Błędna wartość dla pola:
+					{{e}}
+				</p>
+				{% endfor %}
+				{% endif %}
+				{% if ed == 1 %}
+				<p class="bg-success">
+					<i class="fa fa-plus-circle"></i> Dodano
+				</p>
+				{% endif %}
+				{% csrf_token %}
+				<div class="form-group">
+					<h1>Twoje odpowiedź</h1>
+				</div>
+				<div class="form-group">
+					<label for="id_quest">Odpowiedź:</label>
+					<textarea id="summernote" name="answer" class="form-control" rows="15" type="text" >
+						{{edit.answer}}
+					</textarea>
+					<hr />
+				</div>
+				<div class="form-group">
+					<div class="col-lg-2">
+						<input class="btn btn-primary" id="submit" type="submit" rows="1" name="submit" value="Dodaj" />
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+<!-- include codemirror (codemirror.css, codemirror.js, xml.js, formatting.js) -->
+
+<script>
+	$(document).ready(function() {
+		$('#summernote').summernote({
+			height : 300, // set editor height
+			minHeight : null, // set minimum height of editor
+			maxHeight : null, // set maximum height of editor
+			focus : true,                 // set focus to editable area after initializing summernote
+		}, "saveRange");
+	});
+
+</script>
+{% endif %}
+
+{% endblock content %}

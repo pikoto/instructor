@@ -1,0 +1,138 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+{% block header %}
+
+<div class="row-cat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<img src="{% static "core/img/stack/1454797116_generic.png"%}"/>
+			</div>
+			<div class="col-lg-10">
+				<h3><a href="/publications/attatchemts/{{edit.link}}/"><i class="fa fa-reply"></i> </a>Dodawanie załącznika</h3>
+				<p class="lead">
+					{{edit.name|title}}
+				</p>		
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock header %}
+
+{% block content %}
+{% if user.is_authenticated and user.userprofile.status.id == 1 %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="well">
+			<form class="form-horizontal" id="atta_form" method="post" action="/publications/attatchemts/add/{{edit.link}}/" enctype="multipart/form-data" role="form">
+				{% if er %}
+				{% for e in er %}
+				<p class="bg-danger">
+					<i class="fa fa-exclamation-triangle"></i> Błędna wartość dla pola:
+					{{e}}
+				</p>
+				{% endfor %}
+				{% endif %}
+				{% if add == 1 %}
+				<p class="bg-success">
+					<i class="fa fa-plus-circle"></i> Dodano
+				</p>
+				{% endif %}
+				{% csrf_token %}
+				<div class="form-group">
+					<h2>Dodaj załącznik</h2>
+				</div>
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="form-group">
+							<label for="id_name">Nazwa:</label>
+							<input class="form-control" id="id_name" maxlength="128" name="name" type="text"/>
+						</div>
+					</div>
+					<div class="col-lg-1">
+						<div class="form-group">
+							<label for="id_active">Aktywne:</label>
+							<input class="form-control" checked="checked" id="id_active" name="active" type="checkbox" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="id_descriptions">Opis:</label>
+					<textarea id="summernote" name="descriptions" class="form-control" rows="15">
+					</textarea>
+					<hr />
+				</div>
+				<div class="form-group">
+					<label for="id_types">Typ:</label>
+					<select class="form-control" id="id_types" name="types" >
+						{% for e in types %}
+						<option value="{{e.id}}">{{e.name}} | {{e.descriptions}}</option>
+						{% endfor %}
+					</select>
+				</div>							
+				<div class="form-group">
+					<label for="id_files">Załącznik:</label>
+					<input class="form-control" id="id_files" rows="1" name="files" type="file" />
+				</div>						
+				<div class="form-group">
+					<div class=" pull-left">
+						<input class="btn btn-primary" type="submit" rows="1" name="submit" value="Dodaj" />
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
+
+<!-- include codemirror (codemirror.css, codemirror.js, xml.js, formatting.js) -->
+
+<script>
+	$(document).ready(function() {
+		$('#summernote').summernote({
+			height : 300, // set editor height
+			minHeight : null, // set minimum height of editor
+			maxHeight : null, // set maximum height of editor
+			focus : true,                 // set focus to editable area after initializing summernote
+		}, "saveRange");
+	});
+
+</script>
+<script src="{% static "core/js/jquery.datetimepicker.full.min.js" %}"></script>
+<script>
+	jQuery('#datetimepicker_start').datetimepicker({
+		startDate : '+2015/01/01',
+		format : 'Y-m-d H:i',
+		mask : true,
+		lang : 'pl'
+	});
+	jQuery('#datetimepicker_end').datetimepicker({
+		startDate : '+2015/01/01',
+		format : 'Y-m-d H:i',
+		mask : true,
+		lang : 'pl'
+	}); 
+</script>
+{% else %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3 text-center">
+				<div class="well">
+					<h1 class="text-danger">Nie masz uprawnień</h1>
+					<a href="/" class="btn btn-primary">Strona główna</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+
+{% endif %}
+{% endblock content %}

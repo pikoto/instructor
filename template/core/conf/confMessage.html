@@ -1,0 +1,111 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+{% block header %}
+
+<div class="row-cat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<img src="{% static "core/img/stack/1454765824_Developer.png"%}"/>
+			</div>
+			<div class="col-lg-10">
+				<h3 class="featurette-heading">Ustawienia wiadomości głównej</h3>
+				<p class="lead"></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock header %}
+
+{% block content %}
+{% if user.is_authenticated and user.userprofile.status.id == 1 %}
+
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="well">
+			<h2>Lista wiadomości</h2>
+			<div class="">
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th>Tytuł</th>
+							<th>Wiadomość</th>
+							<th>Data od</th>
+							<th>Data do</th>
+							<th>Stan</th>
+							<th>Akcja</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for e in pag %}
+						<tr>
+							<td id="td-vert-align">
+							<p>
+								{{e.title}}
+							</p></td>
+							<td id="td-vert-align">
+							<p>
+								{% autoescape on %}
+									{{e.message|truncatewords:"4"}}
+								{% endautoescape %}
+							</p></td>
+							<td>{{e.start_date|date:"Y-m-d H:i"}}</td>
+							<td>{{e.end_date|date:"Y-m-d H:i"}}</td>
+							<td id="td-vert-align"> {% if e.active %} <i class="fa fa-check-square fa-3x fa-orange"></i> {% else %} <i class="fa fa-minus-square fa-3x"></i> {% endif %} </td>
+							<td id="td-vert-align"> {% if e.active %} <a href="/conf/message/set/{{e.id}}/{{pag.number}}/" class="btn btn-primary">Deaktywuj</a> {% else %} <a href="/conf/message/set/{{e.id}}/{{pag.number}}/" class="btn btn-primary">Aktywuj</a> {% endif %} <a href="/conf/message/edit/{{e.id}}" class="btn btn-default disabled">Edytuj</a><a href="/conf/message/del/{{e.id}}/" class="btn btn-default"><i class="fa fa-trash"></i></a></td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+					
+			</div>
+		</div>
+		<div class="navbar">
+			<div class="container text-center">
+				<ul class="pagination">
+					{% if pag.has_previous %}
+					<li>
+						<a href="?page={{ pag.previous_page_number }}" aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a>
+					</li>
+					{% endif %}
+					{% for e in pag.paginator.page_range  %}
+					<li>
+						<a href="?page={{ e }}">{{ e }}</a>
+					</li>
+					{% endfor %}
+					{% if pag.has_next %}
+					<li>
+						<a href="?page={{ pag.next_page_number }}" aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a>
+					</li>
+					{% endif %}
+				</ul>
+			</div>						
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+
+{% else %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3 text-center">
+				<div class="well">
+					<h1 class="text-danger">Nie masz uprawnień</h1>
+					<a href="/" class="btn btn-primary">Strona główna</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+{% endif %}
+{% endblock content %}

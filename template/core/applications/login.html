@@ -1,0 +1,70 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-4 col-lg-offset-3 col-md-offset-2">
+				<h1>Hello: {{ user.username }}
+				<br/>
+				Twój status to: {{ user.userprofile.status.description }}!</h1>
+				<a href="/logout/" class="btn btn-default" role="button">Wyloguj</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+
+{% else %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3 ">
+				<div class="well">
+					<form class="form-horizontal" id="login_form" method="post" action="/login/" role="form">
+						{% csrf_token %}
+						{% if er %}
+						{% for e in er %}
+						<p class="bg-danger">
+							<i class="fa fa-exclamation-triangle"></i> {{e}}
+						</p>
+						{% endfor %}
+						{% endif %}
+						<div class="form-group">
+							<h1>Logowanie</h1>
+						</div>
+						<div class="form-group">
+							<label for="username">Użytkownik:</label>
+							<input class="form-control" rows="1" name="username" value="" type="text" size="50" />
+						</div>
+						<div class="form-group">
+							<label for="password">Hasło:</label>
+							<input class="form-control" rows="1" name="password" value="" type="password" size="50" />
+						</div>
+						<div class="form-group">
+							<div class="pull-left">
+								<input class="btn btn-primary" type="submit" value="Zaloguj" />
+								<a href="/register/" class="btn btn-default">Nowe konto</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,409 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>{{ dict.index_dc.values }}</title>
+		<link href="{% static "core/css/core.min.css" %}" rel="stylesheet">
+		<link href="{% static "core/css/yamm.min.css" %}" rel="stylesheet">
+		<link href="{% static "core/css/fonts.min.css" %}" rel="stylesheet">
+
+		<script src="{% static "core/js/jquery-1.11.1.min.js" %}"></script>
+
+		<link href="{% static "core/css/summernote.css" %}" rel="stylesheet">
+		<script src="{% static "core/js/summernote.js" %}"></script>
+
+		<link href="{% static "core/css/jquery.datetimepicker.css" %}" rel="stylesheet">
+		
+		<!-- Live Validations -->
+		<script src="{% static "core/js/jquery.alv.js" %}"></script>
+		<link href="{% static "core/css/style.alv.css" %}" rel="stylesheet">
+
+		<!-- to files -->
+		<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.min.css" />
+		<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/theme/monokai.min.css" />
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.min.js"></script>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/xml/xml.min.js"></script>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/2.36.0/formatting.min.js"></script>
+		<!-- ./to files -->
+		
+		     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		{% block other-head %}
+		
+		{% endblock other-head %}
+	</head>
+
+	<body>
+		<!-- Menu -->
+		<nav class="navbar navbar-default navbar-fixed-top yamm" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/">Start</a>
+				</div>
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						{% if user.is_authenticated and user.userprofile.status.id == 1 %}
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Pytania</a>
+							<ul class="dropdown-menu blue-bg-darken">
+								<li>
+									<a href="/questsions/">Pytania</a>
+								</li>
+								<li class="divider"></li>
+								<li>
+									<a href="/questsions/category/conf/">Kategorie ustawienia</a>
+								</li>
+								<li>
+									<a href="/questsions/category/add/">Dodaj kategorię</a>
+								</li>								
+							</ul>
+						</li>
+						{% else %}
+						<li>
+							<a href="/questsions/">Pytania</a>
+						</li>
+						{% endif %}
+						{% if user.is_authenticated and user.userprofile.status.id == 1 %}
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Publikacje</a>
+							<ul class="dropdown-menu blue-bg-darken">
+								<li>
+									<a href="/publications/">Publikacje</a>
+								</li>
+								<li class="divider"></li>
+								<li>
+									<a href="/publications/category/conf/">Kategorie ustawienia</a>
+								</li>
+								<li>
+									<a href="/publications/category/add/">Dodaj kategorię</a>
+								</li>	
+								<li class="divider"></li>
+								<li>
+									<a href="/publications/conf/">Publikacje ustawienia</a>
+								</li>	
+								<li>
+									<a href="/publications/add/">Dodaj publikacje</a>
+								</li>																						
+							</ul>
+						</li>
+						{% else %}
+						<li>
+							<a href="/publications/">Publikacje</a>
+						</li>
+						{% endif %}						
+						<li>
+							<a href="#uczen">Uczeń</a>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						{% if user.is_authenticated and user.userprofile.status.id == 1 %}
+						<li>
+							<a href="/conf/">Ustawienia</a>
+						</li>
+						{% endif %}
+						<li>
+							<a href="#nauzyciel">Nauczyciele</a>
+						</li>
+						<li class="dropdown yamm-half-right">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Moja strefa</a>
+							<ul class="dropdown-menu blue-bg-darken">
+								<li class="grid-yamm">
+									<div class="row ">
+										<div class="col-sm-6 ">
+											<ul class="nav">
+												<li  class="disabled">
+													<a href="#">Moje pytania</a>
+												</li>
+												{% if user.is_authenticated and user.userprofile.status.id == 1 %}
+												<li class="divider"></li>
+												<li>
+													<a href="/conf/message/">Lista news'ów</a>
+												</li>
+												<li>
+													<a href="/conf/message/add/">Dodaj news'a</a>
+												</li>
+												<li>
+													<a href="/questsions/category/add/">Dodaj Kategorie (pytania)</a>
+												</li>
+												<li >
+													<a href="/user/add/">Dodaj użytkownika</a>
+												</li>												
+												{% endif %}
+											</ul>
+										</div>
+										<div class="col-sm-6">
+											<div class="user-image">
+												{% if user.is_authenticated %}
+												<img class="img-circle img-responsive text-center" src="/{{ user.userprofile.avatar }}" width="150px" height="150px" />
+												{% else %}
+												<i class="fa fa-user fa-5x fa-blue"></i>
+												{% endif %}
+											</div>
+											{% if user.is_authenticated %}
+												<h3 class="text-center white-color">{{user.username | title}} 	
+												<a href="/user/self/{{user.username}}"><i class="fa fa-pencil-square-o"></i></a></h3>
+											{% endif %}
+											<ul class="nav">
+												{% if user.is_authenticated %}
+												<li>
+													<a href="/logout/" class="btn btn-primary ">Wyloguj</a>
+												</li>
+												{% else%}
+												<li>
+													<a href="/login/" class="btn btn-primary ">Zaloguj</a>
+												</li>
+												<li class="disabled">
+													<a href="#remember">Zapomniałem hasła?</a>
+												</li>
+												<li>
+													<a href="/register/" class="btn btn-primary">Rejestracja</a>
+												</li>
+												{% endif %}
+											</ul>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<!-- /.navbar-collapse -->
+			</div>
+			<!-- /.container -->
+		</nav>
+		{% block header %}
+
+		<section class="messages">
+			<div class="header-image">
+				<div class="container">
+					<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+						<ol class="carousel-indicators">
+							<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+							{% for e in news_dc %}
+							<li data-target="#carousel-example-generic" data-slide-to="{{forloop.counter}}"></li>
+							{% endfor %}
+						</ol>
+						<div class="carousel-inner" role="listbox">
+							<div class="item active">
+								<img src="{% static "core/img/apla.png" %}" alt="" height="500px">
+								<div class="carousel-caption">
+									<h2 class="text-muted"> 2.0 Wystartował</h2>
+									<p class="lead">
+										Wersja demonstracyjna nowego CMS dla nauczycieli. Zapraszam do zapoznania sie z możliwościami
+									</p>
+								</div>
+							</div>
+							{% for e in news_dc %}
+							<div class="item">
+								<img src="{% static "core/img/apla.png" %}" alt="" height="500px">
+								<div class="carousel-caption">
+									<h2 class="text-muted">{{e.title}}</h2>
+									<p class="lead">
+										{% autoescape on %}
+										{{e.message|safe}}
+										{% endautoescape %}
+									</p>
+								</div>
+							</div>
+							{% endfor %}
+						</div>
+
+						<!-- Controls -->
+						<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev"> <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> <span class="sr-only">Previous</span> </a>
+						<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next"> <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> <span class="sr-only">Next</span> </a>
+					</div>
+				</div>
+			</div>
+		</section>
+		{% endblock header %}
+		{% block content %}
+
+		<section class="questions">
+			<div class="container">
+				<h1 class="text-center">Kto pyta ten nie błądzi</h1>
+				<div class="push"></div>
+				<div class"row">
+					<div class="col-lg-12">
+						<div class"row">
+							<div class="text-center vertical-align">
+								<div class="col-xs-6 col-sm-4">
+									<p>
+										Określasz kategorię (przedmiot, temat, lekcję, dział, zagadnienie). Czekasz na pytania. Odpowiadasz.
+									</p>
+								</div>
+								<div class="col-xs-6 col-sm-4">
+									<div class="circle">
+										<i class="fa fa-5x fa-question fa-blue"></i>
+									</div>
+								</div>
+								<div class="col-xs-6 col-sm-4">
+									<p>
+										Otwierasz dostępną kategorię, przedstawiasz się i zadajesz pytanie. Czekasz na odpowiedź.
+										<a href="#" class="btn btn-default">Zadaj pytanie</a>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="push"></div>
+				<div class="row">
+					<div class="col-lg-12" id="down-lead">
+						<p class="text-center">
+							Tak właśnie działą strefa pytań.
+							<br />
+							Teraz możesz w łatwy sposób określić temat przewodni i zobaczyć co tak naprawdę nurtuje twoich uczniów w tym temacie.
+							<br />
+							Pytania można zadawać anonimowo, przedstawiając się tylko podanym nickiem, lub też weryfikując konto podanym hasłem.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="task blue-bg">
+			<div class="container">
+				<h1 class="text-center">Strefa ucznia</h1>
+
+				<div class="row text-justify">
+					<div class="col-lg-6">
+						<div class="circle-white text-center pull-left">
+							<i class="fa fa-university fa-5x"></i>
+						</div>
+						<h2>Rola nauczyciela</h2>
+						<hr />
+						<p>
+							Każdy uczeń posiada swój login. Dzięki temu możesz dopasować zadania indywidualnie.
+							<br>
+							Dodajesz zadania, czekasz na rozwiązanie, oceniasz i podpowiadasz.
+							Widzsz postępy jak i trudności w rozwiązaniu zadań. Strefa ucznia, to pomoc w indywidualym podejściu.
+							Skupiasz się na istotnych elementach, zgodnie z tempem postępów ucznia.
+						</p>
+					</div>
+					<div class="col-lg-6">
+						<div class="circle-white text-center pull-left">
+							<i class="fa fa-child fa-5x"></i>
+						</div>
+						<h2>Rola ucznia</h2>
+						<hr />
+						<p>
+							Logujesz się, otrzymujesz zadania. Rozwiązujesz zadanie, załanczasz rozwiązanie.
+							<br>
+							Na każdym etapie możesz zadać pytanie, podzielić się swoimi wątpliwościami czy trudnościami.
+							Teraz już nie musisz przytakiwać że wiesz, a nic nie rozumiesz.
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 text-center">
+						<h3>Twój wirtualny zeszyt prac i postępów.</h3>
+						<a href="/login/" class="btn btn-default"><i class="fa fa-sign-in"></i> Zaloguj się </a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="publications">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<h1 class="text-center">Moje publikacje</h1>
+						<p class="text-center">
+							Wszystie informacje w jednym miejscu
+						</p>
+						<p class="text-justify">
+							W łatwy sposób zbierzesz wszystkie swoje publikacje. Dokumenty, prezentacje, notatki, zdjęcia, filmy.
+							Podzielone na kategorie, z możliwością czasowej lub też ograniczonej pubikacji.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+		{% endblock content %}
+		<!-- Footer -->
+		<footer>
+			<div class="container">
+				<div class"row">
+					<div class="col-lg-4 col-md-4 col-xs-6">
+						<h3 class="blue-color">Zobacz też</h3>
+						<div class="footer-social nav">
+							{% for e in footer_dc %}
+							{% if e.name == 'facebook' and e.parms == '1' %}<a href="{{e.value}}" target="_blank"><i class="fa fa-facebook fa-2x"></i></a>{% endif %}
+							{% if e.name == 'twitter' and e.parms == '1' %}<a href="{{e.value}}" target="_blank"><i class="fa fa-twitter fa-2x"></i></a>{% endif %}
+							{% if e.name == 'linkedin' and e.parms == '1' %}<a href="{{e.value}}" target="_blank"><i class="fa fa-linkedin fa-2x"></i></a>{% endif %}
+							{% if e.name == 'google-plus' and e.parms == '1' %}<a href="{{e.value}}" target="_blank"><i class="fa fa-google-plus fa-2x"></i></a>{% endif %}
+							{% if e.name == 'skype' and e.parms == '1' %}<a href="{{e.value}}" target="_blank"><i class="fa fa-skype fa-2x"></i></a>{% endif %}
+							{% if e.name == 'youtube' and e.parms == '1' %}<a href="{{e.value}}" target="_blank"><i class="fa fa-youtube fa-2x"></i></a>{% endif %}
+							{% if e.name == 'vimeo' and e.parms == '1' %}<a href="{{e.value}}" target="_blank"><i class="fa fa-vimeo fa-2x"></i></a>{% endif %}
+							{% if e.name == 'tumblr' and e.parms == '1' %}<a href="{{e.value}}" target="_blank"><i class="fa fa-tumblr fa-2x"></i></a>{% endif %}
+							{% if e.name == 'wikipedia' and e.parms == '1' %}<a href="{{e.value}}" target="_blank"><i class="fa fa-wikipedia-w fa-2x"></i></a>{% endif %}
+							{% if e.name == 'envelope' and e.parms == '1' %}<a href="{{e.value}}" target="_blank"><i class="fa fa-envelope-o fa-2x"></i></a>{% endif %}
+							{% endfor %}
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-xs-6">
+						<h3 class="blue-color">Pytania</h3>
+						<div class="">
+							<ul class="nav">
+								<li>
+									<a href="#">Pytania jeszcze bez odpowiedzi</a>
+								</li>
+								<li>
+									<a href="#">Najczęściej pytana kategoria</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-xs-6">
+						<h3 class="blue-color">Strefy</h3>
+						<div class="">
+							<ul class="nav">
+								<li>
+									<a href="#">Ucznia</a>
+								</li>
+								<li>
+									<a href="#">Nauczyciela</a>
+								</li>
+								<li>
+									<a href="#">Wiadomości</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+				<div class"row">
+					<div class="col-lg-12 col-xs-12 col-sm-6 col-md-8" id="footer-create">
+						<p class="white-color pull-right">
+							<small>Create by: <a href="http://pikoto.net.pl" target="_blank">Piotr Kotowski</a></small>
+						</p>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+		<!-- jQuery -->
+		<script src="{% static "core/js/core.min.js" %}"></script>
+	</body>
+
+</html>

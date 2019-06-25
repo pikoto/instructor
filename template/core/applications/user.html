@@ -1,0 +1,107 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+{% block header %}
+
+<div class="row-cat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<img src="{% static "core/img/stack/1454766091_Group.png"%}"/>
+			</div>
+			<div class="col-lg-10">
+				<h3 class="featurette-heading">Użytkownicy</h3>
+				<p class="lead"></p>
+				<div class="pull-left">
+					<a href="/user/add/" class="btn btn-primary">Dodaj użytkownika</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock header %}
+
+{% block content %}
+{% if user.is_authenticated and user.userprofile.status.id == 1 %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="well">
+			<h2>Lista użytkowników</h2>
+			<div class="">
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th>Login</th>
+							<th>Imię</th>
+							<th>Nazwisko</th>
+							<th>E-mail</th>
+							<th>Dołaczył</th>
+							<th>Status</th>
+							<th>Aktywność</th>
+							<th>Akcja</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for e in pag %}
+						<tr>
+							<td>{{e.username}}</td>
+							<td>{{e.first_name}}</td>
+							<td>{{e.last_name}}</td>
+							<td>{{e.email}}</td>
+							<td>{{e.date_joined|date:"Y-m-d h:i"}}</td>
+							<td>{{e.userprofile.status.description}}</td>
+							<td> {% if e.is_active == 1 %} <a href="/user/active/{{e.id}}/{{pag.number}}/"><i class="fa fa-check-square fa-2x fa-green"></i></a> {% else %} <a href="/user/active/{{e.id}}/{{pag.number}}/"><i class="fa fa-times-circle fa-2x fa-red"></i></a> {% endif %} </td>
+							<td><a href="/user/edit/{{e.username}}"><i class="fa fa-pencil-square-o fa-2x"></i> </a><a href="/user/deleted/{{e.id}}/"><i class="fa fa-trash fa-2x fa-red"></i></a></td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="navbar">
+			<div class="container text-center">
+				<ul class="pagination">
+					{% if pag.has_previous %}
+					<li>
+						<a href="?page={{ pag.previous_page_number }}" aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a>
+					</li>
+					{% endif %}
+					{% for e in pag.paginator.page_range  %}
+					<li>
+						<a href="?page={{ e }}">{{ e }}</a>
+					</li>
+					{% endfor %}
+					{% if pag.has_next %}
+					<li>
+						<a href="?page={{ pag.next_page_number }}" aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a>
+					</li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% else %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3 text-center">
+				<div class="well">
+					<h1 class="text-danger">Nie masz uprawnień</h1>
+					<a href="/" class="btn btn-primary">Strona główna</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,90 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+{% block header %}
+
+<div class="row-cat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<img src="{% static "core/img/stack/1454797116_generic.png"%}"/>
+			</div>
+			<div class="col-lg-10">
+			<h3><a href="/questsions/{{cat.link}}/quest">{{cat.name}}</a></h3>
+				<p class="lead">
+				{% autoescape on %}
+				{{cat.descriptions|safe}}
+				{% endautoescape %}
+				</p>		
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock header %}
+
+{% block content %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="well">
+			<form class="form-horizontal" method="post" action="/questsions/{{cat.link}}/add/" enctype="multipart/form-data" role="form">
+				{% if er %}
+				{% for e in er %}
+				<p class="bg-danger">
+					<i class="fa fa-exclamation-triangle"></i> Błędna wartość dla pola:
+					{{e}}
+				</p>
+				{% endfor %}
+				{% endif %}
+				{% if add == 1 %}
+				<p class="bg-success">
+					<i class="fa fa-plus-circle"></i> Dodano
+				</p>
+				{% endif %}
+				{% csrf_token %}
+				<div class="form-group">
+					<h1>Twoje pytanie</h1>
+				</div>
+				<div class="form-group">
+					<label for="id_quest">Pytanie:</label>
+					<textarea id="summernote" name="quest" class="form-control" rows="15" type="text" >
+					</textarea>
+					<hr />
+				</div>
+				<div class="form-group">
+
+					<div class="row vertical-align">
+						<div class="col-lg-5">
+							{{quest_form.recaptcha}}
+						</div>
+						<div class="col-lg-6">
+							<label for="id_name">Nick: </label>
+							<input class="form-control" id="id_nick" maxlength="128" name="nick" type="text" />
+						</div>
+						<div class="col-lg-2">
+							<input class="btn btn-primary" id="submit" type="submit" rows="1" name="submit" value="Dodaj" />
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
+
+<!-- include codemirror (codemirror.css, codemirror.js, xml.js, formatting.js) -->
+
+<script>
+	$(document).ready(function() {
+		$('#summernote').summernote({
+			height : 300, // set editor height
+			minHeight : null, // set minimum height of editor
+			maxHeight : null, // set maximum height of editor
+			focus : true,                 // set focus to editable area after initializing summernote
+		}, "saveRange");
+	});
+
+</script>
+
+{% endblock content %}

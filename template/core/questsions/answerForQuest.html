@@ -1,0 +1,66 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+{% block header %}
+
+<div class="row-cat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<img src="{% static "core/img/stack/1454797116_generic.png"%}"/>
+			</div>
+			<div class="col-lg-10">
+				<h3 class="featurette-heading"><a href="/questsions/{{quest.category.link}}/quest/">Pytanie: </a><span class="text-muted">{{cat.name}}</span></h3>
+				<p class="lead">
+					{% autoescape on %}
+					{{quest.quest|safe}}
+					{% endautoescape %}
+				</p>
+				<div class="pull-right">
+					<a href="/questsions/{{quest.category.link}}/add/" class="btn btn-primary">Zadaj pytanie</a>
+				</div>				
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock header %}
+
+{% block content %}
+<div class="push"></div>
+
+<section>
+	<div class="row">
+		<div class="container">
+
+			<div class="panel panel-default">
+				<div class="text-center">
+					<h3>Odpowiedź</h3>
+				</div>
+				<hr class="hr">					
+				<p>
+				{% autoescape on %}
+				{{answer.answer|safe}}
+				{% endautoescape %}
+				</p>
+			
+				<div class="panel-footer clearfix">
+					<ul class="list-inline pull-left">
+						<li>
+							<i class="fa fa-clock-o"></i> {{answer.add_date|date:"Y-m-d H:i"}}
+						</li>
+						<li>
+							<i class="fa fa-user"></i> {{answer.add_user}}
+						</li>
+						<li>
+							<a href="/questsions/answer/edit/{{answer.link}}/" class="btn btn-default btn-small">Edytuj</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% endblock content %}
+

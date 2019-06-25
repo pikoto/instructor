@@ -1,0 +1,81 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+
+{% block header %}
+<div class="row-cat">
+	<div class="container">
+		<div class="">
+			<h3 class="text-info"><img src="{% static "core/img/stack/1454765934_Folders-a.png"%}" id="img-header-stack" /> Zbiór pytań</h3>
+		</div>
+	</div>
+</div>
+{% endblock header %}
+
+{% block content %}
+<div class="push"></div>
+
+<section class="">
+	<div class="container ">
+		{% for e in pag %}
+
+		<div class="panel panel-default ">
+			<div class="text-center">
+				<h3>{{e.name|title}}</h3>
+			</div>
+			<hr class="hr">
+
+			<div class="panel-body">
+				<img src="{% static "core/img/stack/1454771479_free-18.svg"%}"/>
+				<span class="desc">{% autoescape on %}
+					{{e.descriptions|safe}}
+					{% endautoescape %} </span>
+			</div>
+
+			<div class="panel-footer clearfix">
+				<ul class="list-inline pull-left">
+					<li>
+						<i class="fa fa-clock-o"></i> {{e.add_date|date:"Y-m-d H:i"}}
+					</li>
+					<li>
+						<i class="fa fa-user"></i> {{e.add_user}}
+					</li>
+				</ul>
+				<ul class="list-inline pull-right">
+					<li>
+						{% for f in quest %} {% if f.id = e.id %} {{f.len}} {% endif %} {% endfor %} <i class="fa fa-comments-o"></i>
+					</li>
+					<li>
+						<a href="/questsions/{{e.link}}/quest/" class="btn btn-primary ">Czytaj i zadaj swoje pytanie </a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		{% endfor %}
+	</div>
+
+	<div class="navbar">
+		<div class="container text-center">
+			<ul class="pagination">
+				{% if pag.has_previous %}
+				<li>
+					<a href="?page={{ pag.previous_page_number }}" aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a>
+				</li>
+				{% endif %}
+				{% for e in pag.paginator.page_range  %}
+				<li>
+					<a href="?page={{ e }}">{{ e }}</a>
+				</li>
+				{% endfor %}
+				{% if pag.has_next %}
+				<li>
+					<a href="?page={{ pag.next_page_number }}" aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a>
+				</li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+</section>
+{% endblock content %}
+

@@ -1,0 +1,90 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+{% block header %}
+
+<div class="row-cat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<img src="{% static "core/img/stack/1454765824_Developer.png"%}"/>
+			</div>
+			<div class="col-lg-10">
+				<h3 class="featurette-heading">Ustawienia rejestracji użytkownika</h3>
+				<p class="lead"></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock header %}
+
+{% block content %}
+{% if user.is_authenticated and user.userprofile.status.id == 1 %}
+
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="well">
+			<h2>Lista ustawień</h2>
+			<div class="">
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th>Opcja</th>
+							<th>Stan</th>
+							<th>Akcja</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for e in conf_dc %}
+						<tr>
+							<td id="td-vert-align">
+							<p >
+								{{e.name}}
+							</p></td>
+							<td id="td-vert-align"> 
+							{% if e.active %} 
+								<i class="fa fa-check-square fa-3x fa-orange"></i>
+							</td>
+							<td id="td-vert-align">
+								<button class="btn btn-default disabled">Aktualny</button>
+							</td>
+							{% else %}
+								<i class="fa fa-minus-square fa-3x"></i>
+							</td>
+							<td id="td-vert-align">
+								<a href="/conf/register/set/{{e.name}}" class="btn btn-primary">Ustaw</a>
+							</td>
+							{% endif %}
+							
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+{% else %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3 text-center">
+				<div class="well">
+					<h1 class="text-danger">Nie masz uprawnień</h1>
+					<a href="/" class="btn btn-primary">Strona główna</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+{% endif %}
+{% endblock content %}

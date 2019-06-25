@@ -1,0 +1,28 @@
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
+    
+    url(r'^$', 'applications.views.index', name='index'),
+    url(r'login/$', 'applications.views.login_user', name='login_user'),
+    url(r'logout/$', 'applications.views.logout_user', name='logout_user'),
+    url(r'^register/$', 'applications.views.register_user', name='register_user'), 
+    
+    url(r'^conf/$', 'applications.views.ConfigIndex', name='ConfigIndex'), 
+    url(r'^conf/register/$', 'applications.views.ConfRegister', name='ConfRegister'),
+    url(r'^conf/register/set/(?P<name>[a-z]+)/$', 'applications.views.ConfRegisterSet', name='ConfRegisterSet'),
+    url(r'^conf/message/$', 'applications.views.ConfMessage', name='ConfMessage'),
+    url(r'^conf/message/set/(?P<name>[0-9]+)/$', 'applications.views.ConfMessageSetActive', name='ConfMessageSetActive'),
+    url(r'^conf/message/add/$', 'applications.views.AddMessage', name='AddMessage'), 
+    url(r'^conf/message/del/(?P<name>[0-9]+)/$', 'applications.views.ConfMessageDel', name='ConfMessageDel'),
+   
+
+
+        
+
+
+    
+)

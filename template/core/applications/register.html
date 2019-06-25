@@ -1,0 +1,121 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+
+{% if conf == 2 %}
+
+<div class="push"></div>
+	
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-md-4 col-lg-offset-3 col-md-offset-2">
+					<p>
+						Teacher 2.0: <strong>Rejestracja jest wyłączona</strong>
+					</p>
+					<a href="/">Strona główna</a>
+					<br />
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<div class="push"></div>
+
+{% else %}
+	{% if registered %}
+	<div class="push"></div>
+	
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-md-4 col-lg-offset-3 col-md-offset-2">
+					<p>
+						Teacher 2.0: <strong>Dziękuje za rejestracje!</strong>
+					</p>
+					<a href="/">Strona główna</a>
+					<br />
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<div class="push"></div>
+	
+	{% else %}
+	<div class="push"></div>
+	
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-lg-offset-3 ">
+					<div class="well">
+						<form class="form-horizontal" id="user_form" method="post" action="/register/" enctype="multipart/form-data" role="form">
+							{% if user_form.errors %}
+								{% for e in user_form.errors %}
+								<p class="bg-danger">
+									<i class="fa fa-exclamation-triangle"></i> Błędna wartość dla pola: 
+									{%if e == "username" %} Login {% endif %}
+									{%if e == "email" %} Email {% endif %}
+									{%if e == "password" %} Hasło {% endif %}
+								</p>						
+								{% endfor %}
+							{% endif %}
+							{% if profile_form.errors %}
+								{% for e in profile_form.errors %}
+								<p class="bg-danger">
+									<i class="fa fa-exclamation-triangle"></i> 
+									{%if e == "website" %} Strona {% endif %}
+									{%if e == "avatar" %} Avatar {% endif %}
+								</p>	
+								{% endfor %}
+							{% endif %}
+							{% csrf_token %}
+							<div class="form-group">
+								<h1>Rejestracja</h1>
+							</div>
+							<div class="form-group">
+								<label for="id_username">Login:</label>
+								<input class="form-control" id="id_username" rows="1" maxlength="30" name="username" type="text" />
+								<span class="helptext">Max 30 znaków. Dozwolone: litery, cyfry i znaki specjalne: @/./+/-/_ </span>
+							</div>
+							<div class="form-group">
+								<label for="id_password">Hasło:</label>
+								<input class="form-control" id="id_password" rows="1" name="password" type="password" />
+							</div>
+							<div class="form-group">
+								<label for="id_email">E-mail:</label>
+								<input class="form-control" id="id_email" rows="1" maxlength="75" name="email" type="email" />
+							</div>
+							<div class="form-group">
+								<label for="id_website">Strona:</label>
+								<input class="form-control" id="id_website" rows="1" maxlength="200" name="website" type="url" />
+							</div>
+							<div class="form-group">
+								<label for="id_avatar">Avatar:</label>
+								<input class="form-control" id="id_avatar" rows="1" name="avatar" type="file" />
+							</div>
+							<div class="form-group">							
+								{{user_form.recaptcha}}
+							</div>
+							<div class="form-group">
+								<div class=" pull-right">
+									<input class="btn btn-primary" type="submit" rows="1" name="submit" value="Rejestracja" />
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<div class="push"></div>
+	{% endif %}
+{% endif %}
+
+{% endblock content %}

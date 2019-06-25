@@ -1,0 +1,152 @@
+{% extends './core/index.html' %}
+
+{% load staticfiles %}
+{% block header %}
+
+<div class="row-cat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<img src="{% static "core/img/stack/1454797116_generic.png"%}"/>
+			</div>
+			<div class="col-lg-10">
+			<h3><a href="/questsions/category/conf/">Edycja kategoria:</a> {{edit.name}}</h3>
+				<p class="lead">
+				{% autoescape on %}
+				{{quest.quest|safe}}
+				{% endautoescape %}
+				</p>		
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock header %}
+
+{% block content %}
+{% if user.is_authenticated and user.userprofile.status.id == 1 %}
+
+{% if ed %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-4 col-lg-offset-3 col-md-offset-2">
+				<p>
+					Teacher 2.0: <strong>Zmiany wprowadzono!</strong>
+				</p>
+				<a href="/questsions/category/conf/">Kategorie ustawienia</a>
+				<br />
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+
+{% else %}
+
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="well">
+			<form class="form-horizontal" id="quest_form" method="post" action="/questsions/category/edit/{{edit.link}}/" enctype="multipart/form-data" role="form">
+				{% if er %}
+				{% for e in er %}
+				<p class="bg-danger">
+					<i class="fa fa-exclamation-triangle"></i> Błędna wartość dla pola:
+					{{e}}
+				</p>
+				{% endfor %}
+				{% endif %}
+				{% csrf_token %}
+				<div class="form-group">
+				</div>
+				<div class="row">
+					<div class="col-lg-11">
+						<div class="form-group">
+							<label for="id_name">Tytuł:</label>
+							<input class="form-control" id="id_name" maxlength="128" name="name" type="text" value="{{edit.name}}"/>
+						</div>
+					</div>
+					<div class="col-lg-1">
+						<div class="form-group">
+							<label for="id_active">Aktywne:</label>
+							<input class="form-control" checked="checked" id="id_active" name="active" type="checkbox" />
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="id_descriptions">Opis:</label>
+					<textarea id="summernote" name="descriptions" class="form-control" rows="15">
+					{{edit.descriptions}}
+					</textarea>
+					<hr />
+				</div>
+				<div class="form-group">
+					<label for="id_status">Status:</label>
+					<input class="form-control" id="id_status" min="0" name="status" type="number" value="{{edit.status}}" />
+				</div>
+				<div class="form-group">
+					<div class=" pull-left">
+						<input class="btn btn-primary" type="submit" rows="1" name="submit" value="Dodaj" />
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
+
+<!-- include codemirror (codemirror.css, codemirror.js, xml.js, formatting.js) -->
+
+<script>
+	$(document).ready(function() {
+		$('#summernote').summernote({
+			height : 300, // set editor height
+			minHeight : null, // set minimum height of editor
+			maxHeight : null, // set maximum height of editor
+			focus : true,                 // set focus to editable area after initializing summernote
+		}, "saveRange");
+	});
+
+</script>
+<script src="{% static "core/js/jquery.datetimepicker.full.min.js" %}"></script>
+<script>
+	jQuery('#datetimepicker_start').datetimepicker({
+		startDate : '+2015/01/01',
+		format : 'Y-m-d H:i',
+		mask : true,
+		lang : 'pl'
+	});
+	jQuery('#datetimepicker_end').datetimepicker({
+		startDate : '+2015/01/01',
+		format : 'Y-m-d H:i',
+		mask : true,
+		lang : 'pl'
+	}); 
+</script>
+{% endif %}
+
+{% else %}
+<div class="push"></div>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3 text-center">
+				<div class="well">
+					<h1 class="text-danger">Nie masz uprawnień</h1>
+					<a href="/" class="btn btn-primary">Strona główna</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="push"></div>
+
+{% endif %}
+{% endblock content %}
